@@ -9,12 +9,13 @@
 system.daemon.set = true
 
 ## Instance layout (base paths)
-method.insert = cfg.basedir,  private|const|string, (cat,"/config/rtorrent/")
-method.insert = cfg.download, private|const|string, (cat,(cfg.basedir),"download/")
-method.insert = cfg.logs,     private|const|string, (cat,(cfg.basedir),"log/")
-method.insert = cfg.logfile,  private|const|string, (cat,(cfg.logs),"rtorrent-",(system.time),".log")
-method.insert = cfg.session,  private|const|string, (cat,(cfg.basedir),".session/")
-method.insert = cfg.watch,    private|const|string, (cat,(cfg.basedir),"watch/")
+method.insert = cfg.sessiontime, private|const|string, (cat,(system.time))
+method.insert = cfg.basedir,     private|const|string, (cat,"/config/rtorrent/")
+method.insert = cfg.download,    private|const|string, (cat,(cfg.basedir),"download/")
+method.insert = cfg.logs,        private|const|string, (cat,(cfg.basedir),"log/")
+method.insert = cfg.logfile,     private|const|string, (cat,(cfg.logs),"rtorrent.log")
+method.insert = cfg.session,     private|const|string, (cat,(cfg.basedir),".session/")
+method.insert = cfg.watch,       private|const|string, (cat,(cfg.basedir),"watch/")
 
 ## Create instance directories
 execute.throw = sh, -c, (cat,\
@@ -31,7 +32,7 @@ execute.throw = sh, -c, (cat,\
 print = (cat, "Logging to ", (cfg.logfile))
 log.open_file = "log", (cfg.logfile)
 log.add_output = "info", "log"
-log.add_output = "debug", "log"
+#log.add_output = "debug", "log"
 log.add_output = "notice", "log"
 log.add_output = "warn", "log"
 log.add_output = "error", "log"
@@ -57,9 +58,9 @@ throttle.max_uploads.set = 100
 throttle.max_uploads.global.set = 250
 
 throttle.min_peers.normal.set = 20
-throttle.max_peers.normal.set = 60
+throttle.max_peers.normal.set = 1024
 throttle.min_peers.seed.set = 30
-throttle.max_peers.seed.set = 80
+throttle.max_peers.seed.set = 1024
 trackers.numwant.set = 80
 
 protocol.encryption.set = allow_incoming,try_outgoing,enable_retry
@@ -76,7 +77,7 @@ network.max_open_sockets.set = 300
 ## Memory resource usage (increase if you have a large number of items loaded,
 ## and/or the available resources to spend)
 pieces.memory.max.set = 1800M
-network.xmlrpc.size_limit.set = 4M
+network.xmlrpc.size_limit.set = 16M
 
 
 ## Basic operational settings (no need to change these)
@@ -94,7 +95,7 @@ system.umask.set = 0027
 system.cwd.set = (directory.default)
 network.http.dns_cache_timeout.set = 25
 schedule2 = monitor_diskspace, 15, 60, ((close_low_diskspace, 1000M))
-#pieces.hash.on_completion.set = no
+pieces.hash.on_completion.set = yes
 #view.sort_current = seeding, greater=d.ratio=
 #keys.layout.set = qwerty
 #network.http.capath.set = "/etc/ssl/certs"
@@ -112,9 +113,9 @@ schedule2 = watch_start, 10, 10, ((load.start_verbose, (cat, (cfg.watch), "start
 ## Run the rTorrent process as a daemon in the background
 ## (and control via XMLRPC sockets)
 #system.daemon.set = true
-network.scgi.open_port = 0.0.0.0:5000
-#network.scgi.open_local = (cat,(session.path),rpc.socket)
-#execute.nothrow = chmod,770,(cat,(session.path),rpc.socket)
+#network.scgi.open_port = 0.0.0.0:5000
+network.scgi.open_local = /config/rtorrent/.session/rpc.socket
+execute.nothrow = chmod,775,(cat,(session.path),rpc.socket)
 
 # Pyrocore Settings
 catch = {"false=", "method.redirect=system.has,false"}

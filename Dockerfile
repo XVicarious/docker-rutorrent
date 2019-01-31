@@ -58,7 +58,7 @@ RUN apk add --no-cache \
 	tini supervisor \
 	# Pyrocore
 	bash python2 git &&\
-    rm -rf /usr/share/man/* /usr/share/include/*
+    rm -rf /usr/share/man/* /usr/share/include/* /etc/nginx/conf.d/*
 RUN apk add --no-cache build-base linux-headers python2-dev &&\
     /opt/pyrocore/update-to-head.sh &&\
     /opt/pyrocore/bin/pip install -r /opt/pyrocore/requirements-torque.txt &&\

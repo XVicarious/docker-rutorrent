@@ -101,7 +101,8 @@ RUN chown -R nginx:nginx /var/lib/nginx &&\
     mkdir -p /run/nginx
 # These programs don't make their own users
 RUN adduser -D -g 'rtorrent' rtorrent &&\
-    adduser -D -g 'supervisor' supervisor
+    adduser -D -g 'supervisor' supervisor &&\
+    addgroup nginx rtorrent
 # Copy the files written for the container
 ADD build/ /
 RUN chmod +x /root/init.sh &&\

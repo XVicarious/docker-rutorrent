@@ -24,7 +24,7 @@ if [ ! -d $nginx_dir ]; then
 	echo "[Init] Creating nginx config directory"
 	mkdir -p "${nginx_dir}"
 fi
-if [ ! -f "${nginx_dir}/rutorrent.conf" ]; then
+if [ ! -f "${nginx_dir}/nginx.conf" ]; then
 	echo "[Init] Copying default nginx config"
 	cp /root/config/nginx.conf "${nginx_dir}/"
 	echo "[Init] Linking config to /etc/nginx/conf.d"

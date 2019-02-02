@@ -1,4 +1,4 @@
-FROM bmaurer/alpine-builder:3.8
+FROM bmaurer/alpine-builder
 MAINTAINER Brian Maurer aka XVicarious
 RUN apk add --no-cache go
 RUN mkdir -p /tmp/gopath /tmp/root/usr/local/bin

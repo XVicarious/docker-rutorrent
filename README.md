@@ -1,7 +1,15 @@
 # docker-rutorrent
+## branch: rut
 
-Right now the config files require some tweaking for this to run properly. Paths in several pyrocore configuration files need to be updated for this to work.
+This is the "rut" branch of this image. This only contains rutorrent and what it needs to run. You need a separate instance of rtorrent running with a scgi socket.
 
-The goal is to have this running with OpenVPN. Some of the work is based off of https://github.com/binhex/arch-rtorrentvpn but I've based it off of Alpine Edge.
+This image is bigger than I wanted it to be. I opted to use supervisord-go as opposed to the python version for size reasons. However, when packed with UPX `supervisord` seg faults. I will be investigating this, as it brings the image down by ~70MB.
 
-I have rebuilt curl with c-ares support, and also built rtorrent and libtorrent from source to enable async DNS for rtorrent, which seems to be a limiting factor for the Arch build of rtorrent.
+To run this image:  
+```
+docker run -d --name rutorrent \
+	-p 80:80/tcp \
+	-v <config-dir>:/config \
+	-v <rtorrent-socket>:/tmp/rpc.socket \
+	bmaurer/rutorent:rut
+```
